@@ -1,5 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/user');
 require('dotenv').config();
 
@@ -20,7 +23,9 @@ async function connectDB() {
 
 connectDB();
 
-
+app.use(morgan('dev'));
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.use("/api", userRoutes);
 
 app.get("/", (req,res) => res.send("welcome to node server"));
