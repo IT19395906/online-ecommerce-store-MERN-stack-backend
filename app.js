@@ -24,11 +24,11 @@ async function connectDB() {
 connectDB();
 
 app.use(morgan('dev'));
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cookieParser());
 app.use("/api", userRoutes);
 
-app.get("/", (req,res) => res.send("welcome to node server"));
+app.get("/", (req,res) => res.status(200).send("welcome to node server"));
 
 const port = process.env.PORT || 8000;
 
