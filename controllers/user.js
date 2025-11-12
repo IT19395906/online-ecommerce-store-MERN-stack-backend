@@ -1,1 +1,6 @@
-exports.home = (req, res) => { res.json({message: ""})}
+exports.home = (req, res) => {
+    res.status(200).json({
+        message: "user",
+        timestamp: new Date().toISOString
+    })
+}
