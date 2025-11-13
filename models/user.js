@@ -7,19 +7,20 @@ const userSchema = new mongoose.Schema({
     name: {
         type: String,
         trim: true,
-        required: true,
-        maxlength: 32
+        required: [true, 'Name is required'],
+        maxlength: [32, 'Name must be less than 32 digits']
     },
     email: {
         type: String,
         trim: true,
-        required: true,
+        required: [true, 'Email is required'],
         unique: true,
-        lowercase: true
+        lowercase: true,
+        match: [/.+\@.+\..+/, 'Email is not valid']
     },
     hashed_password: {
         type: String,
-        required: true
+        required: [true, 'Password is required']
     },
     salt: String,
     role: {
@@ -31,6 +32,9 @@ const userSchema = new mongoose.Schema({
 
 userSchema.virtual('password')
     .set(function (password) {
+        if(!password || password < 8) {
+            throw new Error("Password must be at least 8 digits");
+        }
         this._password = password;
         this.salt = uuidv4();
         this.hashed_password = this.encryptPassword(password);
