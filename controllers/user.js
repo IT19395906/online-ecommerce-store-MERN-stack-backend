@@ -31,15 +31,24 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) { return res.status(400).json({ message: "user with this email not found" }); }
+    try {
+        const user = await User.findOne({ email });
+        if (!user) { return res.status(400).json({ message: "user with this email not found" }); }
 
-    const valid = user.authenticate(password);
-    if (!valid) {
-                return res.status(401).json({message: "email and password not match"});
+        const valid = user.authenticate(password);
+        if (!valid) {
+            return res.status(401).json({ message: "email and password not match" });
+        }
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.cookie('token', token, { httpOnly: true, sameSite: 'strict', maxAge: 3600000 });
+        res.status(200).json({
+            message: "successfully logged in",
+            token: token,
+            user: { _id: user._id, name: user.name, email: user.email }
+        });
+    } catch (error) {
+        res.status(400).json({
+            message: "login failed"
+        });
     }
-    const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {expiresIn: '1h'});
-    res.cookie('token', token, {httpOnly: true, sameSite: 'strict', maxAge: 3600000});
-    res.status(200).json({ token, user })
-
 }

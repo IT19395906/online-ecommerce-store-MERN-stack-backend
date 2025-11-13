@@ -55,8 +55,7 @@ userSchema.methods = {
     },
 
     authenticate: function(password) {
-        if(!password) return '';
-        return this.encryptPassword(password) === this.hashed_password;
+        return bcrypt.compareSync(password + this.salt, this.hashed_password);
     }
 }
 
