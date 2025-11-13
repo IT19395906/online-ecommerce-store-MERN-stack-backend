@@ -9,9 +9,21 @@ exports.register = async (req, res) => {
             user: savedUser
         });
     } catch (error) {
-        res.status(400).json({
-            message: "user register failed",
-            error: error.message
-        });
+        if (error.name == 'ValidationError') {
+            const errors = Object.values(error.errors).map(e => e.message);
+            res.status(400).json({ errors });
+        }
+        else if (error.code == 11000) {
+            res.status(400).json({
+                message: "email already exists",
+                error: error.message
+            });
+        }
+        else {
+            res.status(400).json({
+                message: "user register failed",
+                error: error.message
+            });
+        }
     }
 }
