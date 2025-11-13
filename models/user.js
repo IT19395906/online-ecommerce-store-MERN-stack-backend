@@ -53,6 +53,11 @@ userSchema.methods = {
             return '';
         }
     },
+
+    authenticate: function(password) {
+        if(!password) return '';
+        return this.encryptPassword(password) === this.hashed_password;
+    }
 }
 
 

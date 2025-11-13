@@ -26,7 +26,7 @@ connectDB();
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
-app.use("/api", userRoutes);
+app.use("/api/user", userRoutes);
 
 app.get("/", (req,res) => res.status(200).send("welcome to node server"));
 
