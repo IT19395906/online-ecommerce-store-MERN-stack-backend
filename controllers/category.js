@@ -1,6 +1,6 @@
 const Category = require('../models/category');
 
-exports.add = async (req, res) => {
+exports.addCategory = async (req, res) => {
     try {
         const category = new Category(req.body);
         const savedCategory = await category.save();
